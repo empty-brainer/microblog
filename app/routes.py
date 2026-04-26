@@ -84,8 +84,6 @@ def user(username):
     return render_template('user.html',user=user,posts=posts)
 
 
-
-
 @app.route('/logout')
 def logout():
     logout_user()
