@@ -4,8 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 import logging
-from logging.handlers import RotatingFileHandler
-import resend
+from logging.handlers import RotatingFileHandler, SMTPHandler
 import os 
 
 
@@ -18,17 +17,27 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 if not app.debug:
-    class ResendHandler(logging.Handler):
-        def emit(self, record):
-            resend.api_key = app.config['RESEND_API_KEY']
-            resend.Emails.send({
-                "from": app.config['MAIL_SENDER'],
-                "to": app.config['ADMINS'],
-                "subject": "Microblog Failure",
-                "text": self.format(record)
-            })
+    auth = None
+    if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
+        auth = (
+            app.config['MAIL_USERNAME'],
+            app.config['MAIL_PASSWORD']
+        )
 
-    mail_handler = ResendHandler()
+    secure = None
+    if app.config['MAIL_USE_TLS']:
+        secure = ()
+
+    mail_handler = SMTPHandler(
+        mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
+        fromaddr=app.config['MAIL_USERNAME'],
+        toaddrs=app.config['ADMINS'],
+        subject='Microblog Failure',
+        credentials=auth,
+        secure=secure,
+        timeout=30
+    )
+
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
 
@@ -47,5 +56,5 @@ if not app.debug:
     app.logger.info('Microblog startup')
 
 
-    
+
 from app import routes, models, errors
