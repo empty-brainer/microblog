@@ -8,3 +8,4 @@ class Config:
     RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
     MAIL_SENDER = os.environ.get('MAIL_SENDER')
     ADMINS = os.environ.get('ADMINS', '').split(',')
+    POSTS_PER_PAGE = 5
