@@ -7,6 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask_mail import Mail
 import os 
+from flask_moment import Moment
 
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
+moment = Moment(app)
 
 if not app.debug:
     auth = None
