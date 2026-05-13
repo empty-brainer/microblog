@@ -12,3 +12,4 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = os.environ.get('ADMINS', '').split(',')
     POSTS_PER_PAGE = 25
+    GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
