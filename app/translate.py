@@ -1,16 +1,16 @@
 import requests
-from app import app
+from flask import current_app
 
 
 def translate(text, target_language="English"):
-    if 'GEMINI_API_KEY' not in app.config or \
-            not app.config['GEMINI_API_KEY']:
+    if 'GEMINI_API_KEY' not in current_app.config or \
+            not current_app.config['GEMINI_API_KEY']:
         return 'Error: Translation service is not configured.'
 
     url = (
         "https://generativelanguage.googleapis.com/"
-        f"v1beta/models/gemini-2.5-flash:generateContent"
-        f"?key={app.config['GEMINI_API_KEY']}"
+        f"v1beta/models/gemini-2.5-flash-lite:generateContent"
+        f"?key={current_app.config['GEMINI_API_KEY']}"
     )
 
     payload = {
